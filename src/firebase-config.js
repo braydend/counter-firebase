@@ -1,6 +1,8 @@
 import firebase from "firebase";
+import { apiKey } from './secrets.json';
+
 const config = {
-  apiKey: "AIzaSyAK5gs65A70VcGmsUMucQ-Mnn9zfDNetMY",
+  apiKey,
   authDomain: "counter-55b74.firebaseapp.com",
   databaseURL: "https://counter-55b74.firebaseio.com",
   projectId: "counter-55b74",
