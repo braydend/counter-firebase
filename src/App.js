@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import { connection } from "./firebase-config";
 
@@ -18,30 +17,25 @@ function App() {
     }
   }, [counter]);
 
-  const setCounter = e => {
-    e.preventDefault();
+  const setCounter = value => {
     connection
       .database()
       .ref("counter")
-      .set(5000);
+      .set(value);
   };
 
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <button onClick={setCounter}>click me</button>
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        {isLoading ? (
+          <h1>Loading...</h1>
+        ) : (
+          <React.Fragment>
+            <h1>{count}</h1>
+            <button onClick={() => setCounter(count + 1)}>Increment</button>
+            <button onClick={() => setCounter(count - 1)}>Decrement</button>
+          </React.Fragment>
+        )}
       </header>
     </div>
   );
