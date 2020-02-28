@@ -1,20 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { connection } from "./firebase-config";
 
 function App() {
-  const counter = connection
-    .database()
-    .ref("counter")
-    .orderByKey()
-    .limitToLast(100);
+  const [count, setCount] = useState(null);
+  const isLoading = count === null;
+
+  const counter = connection.database().ref("counter");
 
   useEffect(() => {
     if (counter) {
-      counter.on("child_added", snapshot => {
-        const counter = { text: snapshot.val(), id: snapshot.key };
-        console.log(counter);
+      counter.on("value", snapshot => {
+        const data = { value: snapshot.val(), id: snapshot.key };
+        setCount(data.value);
       });
     }
   }, [counter]);
