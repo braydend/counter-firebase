@@ -1,39 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "./App.css";
+import { useObject } from "react-firebase-hooks/database";
 import { connection } from "./firebase-config";
 
 function App() {
-  const [count, setCount] = useState(null);
-  const isLoading = count === null;
+  const ref = connection.database().ref("counter");
+  const [value, loading, error] = useObject(ref);
 
-  const counter = connection.database().ref("counter");
-
-  useEffect(() => {
-    if (counter) {
-      counter.on("value", snapshot => {
-        const data = { value: snapshot.val(), id: snapshot.key };
-        setCount(data.value);
-      });
-    }
-  }, [counter]);
-
-  const setCounter = value => {
-    connection
-      .database()
-      .ref("counter")
-      .set(value);
+  const setCounter = newValue => {
+    ref.set(newValue);
   };
+
+  if (error) {
+    return (
+      <>
+        <h1>¯\_(ツ)_/¯</h1>
+        <h2>Something unexpected happened</h2>
+      </>
+    );
+  }
 
   return (
     <div className="App">
       <header className="App-header">
-        {isLoading ? (
+        {loading ? (
           <h1>Loading...</h1>
         ) : (
           <React.Fragment>
-            <h1>{count}</h1>
-            <button onClick={() => setCounter(count + 1)}>Increment</button>
-            <button onClick={() => setCounter(count - 1)}>Decrement</button>
+            <h1>{value.val()}</h1>
+            <button onClick={() => setCounter(value.val() + 1)}>
+              Increment
+            </button>
+            <button onClick={() => setCounter(value.val() - 1)}>
+              Decrement
+            </button>
           </React.Fragment>
         )}
       </header>
