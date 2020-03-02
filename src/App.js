@@ -1,15 +1,9 @@
 import React from "react";
 import "./App.css";
-import { useObject } from "react-firebase-hooks/database";
-import { connection } from "./firebase-config";
+import { useFirebaseDatabase } from "./hooks/firebase-hooks";
 
 function App() {
-  const ref = connection.database().ref("counter");
-  const [value, loading, error] = useObject(ref);
-
-  const setCounter = newValue => {
-    ref.set(newValue);
-  };
+  const { value, setValue, loading, error } = useFirebaseDatabase("counter");
 
   if (error) {
     return (
@@ -28,12 +22,8 @@ function App() {
         ) : (
           <React.Fragment>
             <h1>{value.val()}</h1>
-            <button onClick={() => setCounter(value.val() + 1)}>
-              Increment
-            </button>
-            <button onClick={() => setCounter(value.val() - 1)}>
-              Decrement
-            </button>
+            <button onClick={() => setValue(value.val() + 1)}>Increment</button>
+            <button onClick={() => setValue(value.val() - 1)}>Decrement</button>
           </React.Fragment>
         )}
       </header>
